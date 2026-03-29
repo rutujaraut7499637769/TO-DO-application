@@ -7,4 +7,158 @@
     <title>ToDo App</title>
 
     <style>
-        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #dde6e6, #cce37f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+       
+        .heading {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .tasks-container {
+            height: 230px; 
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        .todo-item {
+            background: #f2f5ff;
+            
+            padding: 10px;
+            margin: 6px 0;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .delete-icon {
+            width: 22px;
+            cursor: pointer;
+        }
+
+        .task-input-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        .task-input {
+            flex: 1;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 15px;
+            border: 1px solid #aaa;
+        }
+
+        .btn-add {
+            background: #63e987;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-add:hover {
+            background: #1eda21;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <h2 class="heading">To-Do-Application</h2> 
+
+        <div id="tasks-container" class="tasks-container"></div>
+
+        <div class="task-input-container">
+            <input type="text" id="task-input" placeholder="Enter task" class="task-input" />
+
+            <button onclick="addTask()" class="btn-add">Add</button>
+        </div>
+
+    </div>
+
+    <script>
+
+        const tasks = [];
+
+        function loadFromLocalStorage() {
+
+            const allTasks = JSON.parse(localStorage.getItem("allTasks"));
+
+            if (allTasks) {
+                tasks.push(...allTasks);
+            }
+
+            loadTasks();
+
+        }
+
+        loadFromLocalStorage();
+
+        function loadTasks() {
+
+            localStorage.setItem("allTasks", JSON.stringify(tasks));
+
+            const tasksContainer = document.getElementById("tasks-container");
+
+            tasksContainer.innerHTML = "";
+
+            tasks.forEach((task, index) => {
+
+                tasksContainer.innerHTML += `
+<div class="todo-item">
+${task}
+<img src="trash.png" class="delete-icon" onclick="deleteTask(${index})">
+</div>
+`;
+
+            });
+
+        }
+
+        function deleteTask(index) {
+
+            tasks.splice(index, 1);
+
+            loadTasks();
+
+        }
+
+        function addTask() {
+
+            const taskInputElement = document.getElementById("task-input");
+
+            const task = taskInputElement.value.trim();
+
+            if (!task) {
+                alert("Enter task first"); 
+                return;
+            }
+
+            tasks.unshift(task);
+
+            loadTasks();
+
+            taskInputElement.value = "";
+
+        }
+
+    </script>
+
+</body>
+
+</html>
